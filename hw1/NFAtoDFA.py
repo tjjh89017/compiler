@@ -98,9 +98,12 @@ def convert_NFA_to_DFA(N):
 	return DFA(delta, q0, F, symbol)
 	pass
 
-def __repr(frozen):
+def __repr(frozen, F):
 
-	return ",".join(sorted(x for x in frozen))
+	result = ",".join(sorted(x for x in frozen))
+	if frozen in F:
+		return "*" + result
+	return result
 
 def main():
 
@@ -128,8 +131,6 @@ def main():
 		state = queue.pop()
 		if not state:
 			continue
-		if state in D.F:
-			f.write("*")
 		f.write(__repr(state) + " ")
 		for a in D.symbol:
 			result = D.delta_hat(state, a)
@@ -137,8 +138,6 @@ def main():
 			if not result:
 				f.write("0 ")
 			else:
-				if result in D.F:
-					f.write("*")
 				f.write(__repr(result) + " ")
 
 		f.write("\n")
