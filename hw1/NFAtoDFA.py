@@ -37,7 +37,6 @@ class NFA:
 	def delta_hat(self, state, input_string):
 
 		states = self.lambda_state(set([state]))
-		#print(states)
 		for a in input_string:
 			new_states = set([])
 			for state in states:
@@ -46,7 +45,7 @@ class NFA:
 				except KeyError:
 					pass
 			states = new_states
-		#print(states)
+
 		return self.lambda_state(states)
 
 	def lambda_state(self, states):
@@ -54,13 +53,14 @@ class NFA:
 		if not states:
 			return states
 
+		proc_states = states.copy()
 		change = True
-		while change:
-			for state in states.copy():
-				if states >= self.delta[state][self.empty_symbol]:
-					change = False
-					break
-				states = states | self.delta[state][self.empty_symbol]
+		while len(proc_states):
+			state = proc_states.pop()
+			new_states = self.delta[state][self.empty_symbol]
+			if not new_states in states:
+				proc_states = proc_states | new_states
+				states = states | new_states
 
 		return states
 
@@ -96,7 +96,6 @@ def convert_NFA_to_DFA(N):
 			F.append(q_set)
 
 	return DFA(delta, q0, F, symbol)
-	pass
 
 def __repr(frozen, F):
 
@@ -123,25 +122,31 @@ def main():
 	N = NFA(transition_table, '1', set([str(len(s[1:]))]), alphabet, "LAMBDA")	
 	D = convert_NFA_to_DFA(N)
 
-	# output
+	# output	
 	f = open(sys.argv[2], "w")
 	f.write(",".join(D.symbol) + "\n")
 	queue = set([D.q0])
-	while len(queue) > 0:
-		state = queue.pop()
+	proc_queue = queue.copy()
+	while len(proc_queue) > 0:
+		state = proc_queue.pop()
 		if not state:
 			continue
-		f.write(__repr(state) + " ")
+		f.write(__repr(state, D.F) + " ")
 		for a in D.symbol:
 			result = D.delta_hat(state, a)
-			queue.add(result)
+
+			if not result in queue:
+				queue.add(result)
+				proc_queue.add(result)
+
 			if not result:
 				f.write("0 ")
 			else:
-				f.write(__repr(result) + " ")
+				f.write(__repr(result, D.F) + " ")
 
 		f.write("\n")
 	f.close()
+	
 
 if __name__ == '__main__':
 	main()
