@@ -41,7 +41,7 @@ class NFA:
 			new_states = set([])
 			for state in states:
 				try:
-					new_states = new_states | self.delta[state][a]
+					new_states = self.lambda_state(new_states | self.delta[state][a])
 				except KeyError:
 					pass
 			states = new_states
