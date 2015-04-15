@@ -123,8 +123,7 @@ def main():
 	D = convert_NFA_to_DFA(N)
 
 	# output	
-	#f = open(sys.argv[2], "w")
-	f = sys.stdout
+	f = open(sys.argv[2], "w")
 	f.write(",".join(D.symbol) + "\n")
 	queue = set([D.q0])
 	proc_queue = queue.copy()
