@@ -17,6 +17,8 @@ class DFA:
 	def delta_hat(self, state, input_string):
 
 		for a in input_string:
+			if a not in self.delta[state].keys():
+				return ""
 			state = self.delta[state][a]
 		return state
 
@@ -111,42 +113,28 @@ def main():
 	s = f.read().split("\n")[:-1]
 	f.close()
 	# remove the last parameter
-	alphabet = ["LAMBDA"] + s[0].split(",")[1:-1]
 	transition_table = {}
+	alpha = s[0].split(",")
+	s = s[1:]
+	F = []
 
-	for i, states in enumerate(s[1:], 1):
-		transition_table[str(i)] = {}
-		for j, state in enumerate(states.split(" "), 0):
-			transition_table[str(i)][alphabet[j]] = set(x for x in state.split(",") if x not in ['0', '*'])
+	for state in s:
+		q = state.split(" ")
+		if not q[-1]:
+			q = q[:-1]
+		transition_table[q[0]] = {}
+		for trans in zip(alpha, q[1:]):
+			if trans[1] != "0":
+				transition_table[q[0]][trans[0]] = trans[1]
+			if "*" in trans[1]:
+				F.append(trans[1])
 
-	N = NFA(transition_table, '1', set([str(len(s[1:]))]), alphabet, "LAMBDA")	
-	D = convert_NFA_to_DFA(N)
-
-	# output	
-	f = open(sys.argv[2], "w")
-	f.write(",".join(D.symbol) + "\n")
-	queue = set([D.q0])
-	proc_queue = queue.copy()
-	while len(proc_queue) > 0:
-		state = proc_queue.pop()
-		if not state:
-			continue
-		f.write(__repr(state, D.F) + " ")
-		for a in D.symbol:
-			result = D.delta_hat(state, a)
-
-			if not result in queue:
-				queue.add(result)
-				proc_queue.add(result)
-
-			if not result:
-				f.write("0 ")
-			else:
-				f.write(__repr(result, D.F) + " ")
-
-		f.write("\n")
-	f.close()
-	
+	D = DFA(transition_table, s[0].split()[0], F, alpha)
+	st = input()
+	if D.valid(st):
+		print("valid")
+	else:
+		print("error")
 
 if __name__ == '__main__':
 	main()

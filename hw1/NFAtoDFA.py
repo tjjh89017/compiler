@@ -17,6 +17,8 @@ class DFA:
 	def delta_hat(self, state, input_string):
 
 		for a in input_string:
+			if a not in self.delta[state].keys():
+				return ""
 			state = self.delta[state][a]
 		return state
 
@@ -146,7 +148,6 @@ def main():
 
 		f.write("\n")
 	f.close()
-	
 
 if __name__ == '__main__':
 	main()
