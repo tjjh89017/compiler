@@ -13,6 +13,12 @@ Execute NFAtoDFA.py by followed command
 ./NFAtoDFA.py input.txt output.txt
 ```
 
+or
+
+```
+python3 ./NFAtoDFA.py input.txt output.txt
+```
+
 where `input.txt` is NFA and `output.txt` is output DFA.
 
 ##2. DFA
@@ -21,6 +27,12 @@ Execute DFA.py by followed command
 
 ```
 ./DFA.py input.txt
+```
+
+or 
+
+```
+python3 ./DFA.py input.txt
 ```
 
 and then input the string by keyboard
