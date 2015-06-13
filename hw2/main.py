@@ -72,9 +72,9 @@ def closure1(prod_list, LR1set, F):
 		current_size = len(items)
 
 		lr1items = list(items)
-		print()
-		print("lr1items")
-		print(lr1items)
+		#print()
+		#print("lr1items")
+		#print(lr1items)
 		for item in lr1items[current_pos:current_size]:
 			if item[1][-1] == "*":
 				continue
@@ -115,9 +115,9 @@ def main():
 	test_case = grammer[int(grammer[0]) + 2:-1]
 	grammer = grammer[1:int(grammer[0]) + 1]
 
-	print(grammer)
-	print()
-	print(test_case)
+	#print(grammer)
+	#print()
+	#print(test_case)
 
 	# grammer parse
 	G = {}
@@ -132,38 +132,45 @@ def main():
 		ts = t.split()
 		T.append((ts[0][0],ts[0][3:], frozenset(set([x for x in ts[1][1:-1] if x != ',']))))
 
-	print()
-	print("T")
-	print(T)
-	print()
-	print("G")
-	print(G)
+	#print()
+	#print("T")
+	#print(T)
+	#print()
+	#print("G")
+	#print(G)
 
-	print()
+	#print()
 	F = FIRST(G)
-	print("FIRST")
-	print(F)
-	'''
-	for key in G.keys():
-		print(key)
-		print(first_set(G, key))
-		print()
-	'''
+	#print("FIRST")
+	#print(F)
+
 	# calc closure1
 	prod_list = []
 	for key in G.keys():
 		for g in G[key]:
 			prod_list.append((key, g))
-	print()
-	print("prod_list")
-	print(prod_list)
+	#print()
+	#print("prod_list")
+	#print(prod_list)
 
-	for t in T:
-		items = closure1(prod_list, set([t]), F)
-		print(items)
-		print("t")
-		print(t)
-		print("#")
+	with open(sys.argv[2], "w") as f:
+
+		for t in T:
+			items = closure1(prod_list, set([t]), F)
+			out = {}
+			for item in items:
+				s = item[0] + "->" + item[1]
+				if s not in out:
+					out[s] = set()
+				out[s] = out[s] | item[2]
+	
+			print(out)
+			for index, element in out.items():
+				f.write(index + " {" + ",".join(list(element)) + "}\n")
+				#print("t")
+			f.write("#\n")
+			#print(t)
+			print("#")
 
 	pass
 
