@@ -99,8 +99,6 @@ def closure1(prod_list, LR1set, F):
 					items.add((product[0], "*" + product[1], frozenset(set([term]))))
 
 		current_pos = new_pos
-		print()
-		print(items)
 
 	return items
 
@@ -161,7 +159,8 @@ def main():
 	print(prod_list)
 
 	for t in T:
-		closure1(prod_list, set([t]), F)
+		items = closure1(prod_list, set([t]), F)
+		print items
 		print("t")
 		print(t)
 		print("#")
