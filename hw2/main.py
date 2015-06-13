@@ -160,7 +160,7 @@ def main():
 
 	for t in T:
 		items = closure1(prod_list, set([t]), F)
-		print items
+		print(items)
 		print("t")
 		print(t)
 		print("#")
